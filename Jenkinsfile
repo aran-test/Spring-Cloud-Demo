@@ -2,8 +2,7 @@ node {
   checkout scm
 
     stage('Build') {
-        def mvnHome = tool 'M3'
-        sh "${mvnHome}/bin/mvn package"
+        sh "./gradlew clean build"
     }
 
     stage('Deploy') {
