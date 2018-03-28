@@ -9,21 +9,27 @@ node {
         when {
         	branch 'develop'
         }
-        println 'deploying to develop ......'
+        steps {
+                println 'deploying to develop ......'
+        }
     }
 
     stage('Deploy to test envs') {
     	when {
     		branch 'release/*'
     	}
-    	println 'deploying to qa and staging.........'
+    	steps {
+    		println 'deploying to qa and staging.........'
+    	}
     }
 
     stage('deploy to live') {
     	when {
     		branch 'master'
     	}
-    	input message: 'Click to deploy to live'
-    	println 'Deploying to live.....'
+    	steps {
+    		input message: 'Click to deploy to live'
+    		println 'Deploying to live.....'
+    	}
     }
 }
