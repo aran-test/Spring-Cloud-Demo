@@ -1,19 +1,29 @@
 node {
   checkout scm
 
-    stage('Build') {
+    stage('Build + Test') {
         sh "./gradlew clean build"
     }
 
-    stage('Deploy') {
-        if (env.BRANCH_NAME == 'develop') {
-            println 'Deploy to dev'
-        } else if (env.BRANCH_NAME == 'master') {
-            println 'Deploy to test'
-        } else if (env.BRANCH_NAME == 'release'){
-            println 'Deploy to staging'
-        } else {
-            println "No deployment for branch ${env.BRANCH_NAME}"
+    stage('Deploy to Development') {
+        when {
+        	branch 'develop'
         }
+        println 'deploying to develop ......'
+    }
+
+    stage('Deploy to test envs') {
+    	when {
+    		branch 'release/*'
+    	}
+    	println 'deploying to qa and staging.........'
+    }
+
+    stage('deploy to live') {
+    	when {
+    		branch 'master'
+    	}
+    	input message: 'Click to deploy to live'
+    	println 'Deploying to live.....'
     }
 }
