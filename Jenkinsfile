@@ -5,31 +5,15 @@ node {
         sh "./gradlew clean build"
     }
 
-    stage('Deploy to Development') {
-        when {
-        	branch 'develop'
+    stage('Deploy') {
+        if (env.BRANCH_NAME == 'develop') {
+            println 'Deploy to dev'
+        } else if (env.BRANCH_NAME == 'master') {
+            println 'Deploy to live'
+        } else if (env.BRANCH_NAME ~= 'release/*'){
+            println 'Deploy to staging'
+        } else {
+            println "No deployment for branch ${env.BRANCH_NAME}"
         }
-        steps {
-                println 'deploying to develop ......'
-        }
-    }
-
-    stage('Deploy to test envs') {
-    	when {
-    		branch 'release/*'
-    	}
-    	steps {
-    		println 'deploying to qa and staging.........'
-    	}
-    }
-
-    stage('deploy to live') {
-    	when {
-    		branch 'master'
-    	}
-    	steps {
-    		input message: 'Click to deploy to live'
-    		println 'Deploying to live.....'
-    	}
     }
 }
