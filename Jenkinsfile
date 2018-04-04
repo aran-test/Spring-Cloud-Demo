@@ -1,54 +1,34 @@
-pipeline {
-  
-  agent any
-  
-  stages {
-    stage('Test') {
-    when {
-    anyOf {
-            branch 'develop'
-            expression { BRANCH_NAME ==~ /hotfix|hotfix\/[0-9]*|release\/[0-9]*/ }
-        }
-    }
-        steps {
-            echo 'Testing'
-        }
-    }
-    
-    stage('Build Docker Image') {
-        steps {
-            echo 'Building Image'
-        }
-    }
+node {
+  checkout scm
 
-    stage('Deploy for develop') {
-        when {
-            branch 'develop'
+    if (env.BRANCH_NAME == 'develop') {
+        stage('Test'){
+            sh './gradlew clean check'
         }
-        steps {
-            echo 'Deploying to develop'
-        }
-    }
 
-    stage('Deploy for release or hotfix') {
-        when {
-            expression { BRANCH_NAME ==~ /hotfix|hotfix\/[0-9]*|release\/[0-9]*/ }
+        stage('Build Docker Image') {
+            echo 'Building image'
         }
-        steps {
-            echo 'Deploying to Staging and QA'
+
+        stage('Deploy to Developement Environment') {
+            echo 'Deploy to Dev'
         }
-    }
-    stage('Deploy to Live') {
-        when {
-            expression { BRANCH_NAME ==~ /hotfix|hotfix\/[0-9]*|release\/[0-9]*/ }
+
+    } else if (env.BRANCH_NAME ==~ /hotfix|hotfix\/[0-9]*|release\/[0-9]*/) {
+        stage('Test'){
+            sh './gradlew clean check'
         }
-        input {
-            message "Should we deploy this version to Live?"
-            ok "Go, go, go!"        
+
+        stage('Build Docker Image') {
+            echo 'Building image'
         }
-        steps {
-            echo 'Deploying to Live'
+        stage('Deploy to Stage') {
+            echo 'Deploy to Staging'
         }
-    }
-  }
+        stage('Deploy to QA') {
+            echo 'Deploy to QA'
+        }
+        
+
+    } 
 }
