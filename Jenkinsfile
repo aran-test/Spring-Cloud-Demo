@@ -14,12 +14,18 @@ node {
 			echo 'Deploy to Dev'
 		}
 
-    } else if (env.BRANCH_NAME == 'master') {
-        println 'Deploy to live'
     } else if (env.BRANCH_NAME ==~ /release/){
-        println 'Deploy to staging'
+        stage('Deploy to Test Environment'){
+            echo 'Deploy to Staging and QA'
+        }
+    } else if (env.BRANCH_NAME == 'master') {
+        stage('Deploy to Live Environment'){
+            echo 'Deploy to Live'
+        }
     } else {
-        println "No deployment for branch ${env.BRANCH_NAME}"
+        stage('Unknown stage'){
+            echo 'No deployment? '
+        }
     }
     
 }
