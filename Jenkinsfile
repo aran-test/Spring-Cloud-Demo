@@ -22,9 +22,7 @@ pipeline {
         steps {
             echo 'Deploying to develop'
         }
-    }
-
-    stage('Deploy to Staging/QA') {
+        
         when {
             expression { BRANCH_NAME ==~ /hotfix|hotfix\/[0-9]*|release\/[0-9]*/ }
         }
