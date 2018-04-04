@@ -1,31 +1,36 @@
-node {
-  checkout scm
-
-	if (env.BRANCH_NAME == 'develop') {
-		stage('Test'){
-			sh './gradlew clean check'
-		}
-
-		stage('Build Docker Image'){
-			echo 'Building image'
-		}
-
-		stage('Deploy to Developement Environment'){
-			echo 'Deploy to Dev'
-		}
-
-    } else if (env.BRANCH_NAME ==~ /release/){
-        stage('Deploy to Test Environment'){
-            echo 'Deploy to Staging and QA'
-        }
-    } else if (env.BRANCH_NAME == 'master') {
-        stage('Deploy to Live Environment'){
-            echo 'Deploy to Live'
-        }
-    } else {
-        stage('Unknown stage'){
-            echo 'No deployment? '
+pipeline {
+  
+  agent any
+  
+  stages {
+    stage('Test') {
+        steps {
+            echo 'Testing'
         }
     }
     
+    stage('Build Docker Image') {
+        steps {
+            echo 'Building Image'
+        }
+    }
+
+    stage('Deploy to develop') {
+        when {
+            branch 'develop'
+        }
+        steps {
+            echo 'Deploying to develop'
+        }
+    }
+
+    stage('Deploy to Staging/QA') {
+        when {
+            expression { BRANCH_NAME ==~ /hotfix|hotfix\/[0-9]*|release\/[0-9]*/ }
+        }
+        steps {
+            echo 'Deploying to Staging and QA'
+        }
+    }
+  }
 }
