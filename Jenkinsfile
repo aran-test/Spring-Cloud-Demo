@@ -4,6 +4,12 @@ pipeline {
   
   stages {
     stage('Test') {
+    when {
+    anyOf {
+            branch 'develop'
+            expression { BRANCH_NAME ==~ /hotfix|hotfix\/[0-9]*|release\/[0-9]*/ }
+        }
+    }
         steps {
             echo 'Testing'
         }
