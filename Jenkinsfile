@@ -28,7 +28,5 @@ node {
         stage('Deploy to QA') {
             echo 'Deploy to QA'
         }
-        
-
     } 
 }
