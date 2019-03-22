@@ -24,3 +24,5 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+make_release_cherry_pick.sh
