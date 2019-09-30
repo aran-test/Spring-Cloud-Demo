@@ -1,4 +1,4 @@
-node {
+node('inspect') {
   checkout scm
 
     if (env.BRANCH_NAME == 'develop') {
@@ -12,7 +12,7 @@ node {
         }
 
         stage('Deploy to Developement Environment') {
-            echo 'Deploy to Dev'
+            echo 'Deploy to Devopement env'
         }
 
     } else if (env.BRANCH_NAME ==~ /hotfix|hotfix\/[0-9]*|release\/[0-9]*/) {
